@@ -1,7 +1,10 @@
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -26,9 +29,42 @@ public class MyTestCases {
 		
 	}
 
-	@Test
-	public void myFirstTest() throws MalformedURLException {
+	@Test(enabled = false)
+	public void AddTowNum() throws MalformedURLException {
 		
 		driver = new AndroidDriver(new URL(AppiumURL), caps);
+		driver.findElement(By.id("com.google.android.calculator:id/digit_7")).click();
+		driver.findElement(By.id("com.google.android.calculator:id/op_add")).click();
+		driver.findElement(By.id("com.google.android.calculator:id/digit_8")).click();
+		
+		String ActualResult = driver.findElement(By.id("com.google.android.calculator:id/result_preview")).getText();
+		String ExpectedResult = "15";
+		
+		org.testng.Assert.assertEquals(ActualResult, ExpectedResult);
+		
 	}
-}
+	
+	@Test
+	public void clickTowNumRandom() throws MalformedURLException, InterruptedException {
+	
+		driver = new AndroidDriver(new URL(AppiumURL), caps);
+
+		List<WebElement> AllButtons = driver.findElements(By.className("android.widget.ImageButton"));
+		
+		for(int i = 0; i<AllButtons.size(); i++) {
+			if(AllButtons.get(i).getAttribute("resource-id").contains("digit")) {
+				String TheNum = AllButtons.get(i).getAttribute("resource-id").replace("com.google.android.calculator:id/digit_", "");
+				int TheIntNum = Integer.parseInt(TheNum);
+				if(TheIntNum%2==0) 
+				System.out.println(TheIntNum);
+				AllButtons.get(i).click();
+
+			}
+		}
+		String Actual = driver.findElement(By.id("com.google.android.calculator:id/formula")).getText();
+		String Expected = "86420";
+		
+		Thread.sleep(2000);
+		org.testng.Assert.assertEquals(Actual, Expected);
+		}
+	}
