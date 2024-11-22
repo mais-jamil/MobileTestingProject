@@ -13,58 +13,72 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 
 public class MyTestCases {
-	
+
 	DesiredCapabilities caps = new DesiredCapabilities();
 	String AppiumURL = "http://127.0.0.1:4723/wd/hub";
-	AndroidDriver driver ;
-	
-	
+	AndroidDriver driver;
+
 	@BeforeTest
 	public void mySetUp() {
-		
-		caps.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android" );
-		caps.setCapability(MobileCapabilityType.DEVICE_NAME, "testphone1" );
+
+		caps.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
+		caps.setCapability(MobileCapabilityType.DEVICE_NAME, "testphone1");
 		File myApplication = new File("src/application/calculator.apk");
 		caps.setCapability(MobileCapabilityType.APP, myApplication.getAbsolutePath());
-		
+
 	}
 
 	@Test(enabled = false)
 	public void AddTowNum() throws MalformedURLException {
-		
+
 		driver = new AndroidDriver(new URL(AppiumURL), caps);
 		driver.findElement(By.id("com.google.android.calculator:id/digit_7")).click();
 		driver.findElement(By.id("com.google.android.calculator:id/op_add")).click();
 		driver.findElement(By.id("com.google.android.calculator:id/digit_8")).click();
-		
+
 		String ActualResult = driver.findElement(By.id("com.google.android.calculator:id/result_preview")).getText();
 		String ExpectedResult = "15";
-		
+
 		org.testng.Assert.assertEquals(ActualResult, ExpectedResult);
-		
+
 	}
-	
-	@Test
-	public void clickTowNumRandom() throws MalformedURLException, InterruptedException {
-	
+
+	@Test(enabled = false)
+	public void clickNumbers() throws MalformedURLException, InterruptedException {
+
 		driver = new AndroidDriver(new URL(AppiumURL), caps);
 
 		List<WebElement> AllButtons = driver.findElements(By.className("android.widget.ImageButton"));
-		
-		for(int i = 0; i<AllButtons.size(); i++) {
-			if(AllButtons.get(i).getAttribute("resource-id").contains("digit")) {
-				String TheNum = AllButtons.get(i).getAttribute("resource-id").replace("com.google.android.calculator:id/digit_", "");
-				int TheIntNum = Integer.parseInt(TheNum);
-				if(TheIntNum%2==0) 
-				System.out.println(TheIntNum);
-				AllButtons.get(i).click();
 
+		for (int i = 0; i < AllButtons.size(); i++) {
+			if (AllButtons.get(i).getAttribute("resource-id").contains("digit")) {
+				AllButtons.get(i).click();
 			}
 		}
 		String Actual = driver.findElement(By.id("com.google.android.calculator:id/formula")).getText();
-		String Expected = "86420";
-		
+		String Expected = "7894561230";
+
 		Thread.sleep(2000);
 		org.testng.Assert.assertEquals(Actual, Expected);
+	}
+
+	@Test
+	public void clickEvenNum() throws MalformedURLException {
+		driver = new AndroidDriver(new URL(AppiumURL), caps);
+		List<WebElement> AllButtons = driver.findElements(By.className("android.widget.ImageButton"));
+
+		for (int i = 0; i < AllButtons.size(); i++) {
+			if (AllButtons.get(i).getAttribute("resource-id").contains("digit")) {
+				String theNum = AllButtons.get(i).getAttribute("resource-id").replace("com.google.android.calculator:id/digit_", "");
+				int IntNum = Integer.parseInt(theNum);
+				if(IntNum %2 ==0) {
+					AllButtons.get(i).click();
+				}
+			}
+			
+			String Actual = driver.findElement(By.id("com.google.android.calculator:id/formula")).getText();
+			String Expected = "84620";
+
 		}
 	}
+}

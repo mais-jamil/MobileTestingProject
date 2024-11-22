@@ -6,7 +6,7 @@
       <class name="MyTestCases">
         <methods>
           <include name="mySetUp"/>
-          <include name="clickTowNumRandom"/>
+          <include name="AddTowNum"/>
         </methods>
       </class> <!-- MyTestCases -->
     </classes>
